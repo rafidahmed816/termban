@@ -7,6 +7,7 @@ use ratatui::{backend::CrosstermBackend, Terminal};
 use std::io;
 
 mod model;
+mod storage;
 mod ui;
 
 use model::{sort_projects, InputMode, Project, SortOrder};
@@ -18,7 +19,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
-    let mut projects = vec![Project::new("My First Project")];
+    // Load whatever was saved last time; if there's nothing saved yet (or
+    // loading fails for some reason) start fresh with one empty project.
+    let mut projects = storage::load_projects().unwrap_or_default();
+    if projects.is_empty() {
+        projects.push(Project::new("My First Project"));
+    }
 
     let mut current_project = 0;
     let mut current_column = 0;
@@ -76,6 +82,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                 _ => {}
                             }
                             input_text.clear();
+                            let _ = storage::save_projects(&projects);
                         }
                         input_mode = InputMode::Normal;
                     }
@@ -146,6 +153,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                 current_project -= 1;
                             }
                             selected_task = 0;
+                            let _ = storage::save_projects(&projects);
                         }
                     }
                     // NEW: Press '[' to move the highlighted task to the previous column
@@ -157,6 +165,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                 {
                                     current_column -= 1;
                                     selected_task = new_index;
+                                    let _ = storage::save_projects(&projects);
                                 }
                             }
                         }
@@ -170,6 +179,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                 {
                                     current_column += 1;
                                     selected_task = new_index;
+                                    let _ = storage::save_projects(&projects);
                                 }
                             }
                         }
@@ -181,6 +191,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                             if selected_task > 0 {
                                 selected_task -= 1;
                             }
+                            let _ = storage::save_projects(&projects);
                         }
                     }
                     KeyCode::Char('s') => {
@@ -195,6 +206,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
     }
+
+    let _ = storage::save_projects(&projects);
 
     disable_raw_mode()?;
     execute!(terminal.backend_mut(), LeaveAlternateScreen, DisableMouseCapture)?;

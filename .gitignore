@@ -1,1 +1,13 @@
+# Build artifacts
 /target
+
+# Editor / OS cruft
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Local save data (this lives in ~/.local/share, not the repo, but just in case)
+projects.json
+.puku
+./puku
