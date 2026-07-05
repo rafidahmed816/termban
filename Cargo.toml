@@ -1,7 +1,22 @@
 [package]
-name = "ratatui_kanban"
+name = "termban"
 version = "0.1.0"
 edition = "2024"
+repository = "https://github.com/rafidahmed816/termban"
+homepage = "https://github.com/rafidahmed816/termban"
+readme = "README.md"
+authors = ["Rafid Ahmed rafidahmed816@gmail.com"]
+license = "MIT"
+
+keywords = ["kanban", "terminal", "tui", "ratatui"]
+categories = ["command-line-utilities"]
+
+[package.metadata.wix]
+upgrade-guid = "4465C032-2320-443F-91AE-F20A3D29871A"
+path-guid = "CF546E20-C6AB-4BEA-AFCA-2BF555074D73"
+license = false
+eula = false
+
 
 [dependencies]
 chrono = { version = "0.4.45", features = ["serde"] }
@@ -10,3 +25,8 @@ dirs = "6.0.0"
 ratatui = "0.30.2"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.150"
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
