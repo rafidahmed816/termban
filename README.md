@@ -37,7 +37,7 @@ cargo run --release
 
 ## Data storage
 
-Your boards are saved as JSON at `~/.local/share/termban/projects.json`. The
+Termban stores your projects in `$XDG_DATA_HOME/termban/projects.json` (or `~/.local/share/termban/projects.json` if `XDG_DATA_HOME` is unset). The
 file is written after every change, so you shouldn't lose data even if the
 app exits unexpectedly.
 

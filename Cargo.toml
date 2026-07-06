@@ -5,17 +5,27 @@ edition = "2024"
 repository = "https://github.com/rafidahmed816/termban"
 homepage = "https://github.com/rafidahmed816/termban"
 readme = "README.md"
-authors = ["Rafid Ahmed rafidahmed816@gmail.com"]
+authors = ["Rafid Ahmed <rafidahmed816@gmail.com>"]
 license = "MIT"
-
+description = "A terminal Kanban board built with Ratatui"
 keywords = ["kanban", "terminal", "tui", "ratatui"]
 categories = ["command-line-utilities"]
 
-[package.metadata.wix]
-upgrade-guid = "4465C032-2320-443F-91AE-F20A3D29871A"
-path-guid = "CF546E20-C6AB-4BEA-AFCA-2BF555074D73"
-license = false
-eula = false
+
+
+[package.metadata.deb]
+depends = "$auto"
+section = "utils"
+priority = "optional"
+assets = [
+    ["target/release/termban", "usr/bin/termban", "755"],
+]
+
+[package.metadata.generate-rpm]
+assets = [
+    { source = "target/release/termban", dest = "/usr/bin/termban", mode = "755" }
+]
+
 
 
 [dependencies]
@@ -26,7 +36,4 @@ ratatui = "0.30.2"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.150"
 
-# The profile that 'dist' will build with
-[profile.dist]
-inherits = "release"
-lto = "thin"
+
